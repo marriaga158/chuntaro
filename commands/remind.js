@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const { MessageActionRow, MessageButton } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -10,6 +11,13 @@ module.exports = {
                 .setRequired(true)),
 	async execute(interaction) {
         const timeStr = interaction.options.getString('time');
-		await interaction.reply('remind command called ' + timeStr);
+        const buttonRow = new MessageActionRow()
+            .addComponents(
+                new MessageButton()
+                    .setCustomId('testButton')
+                    .setLabel('Primary')
+                    .setStyle('PRIMARY'),
+            );
+		await interaction.reply({ content: 'remind command called ' + timeStr, components: [buttonRow] });
 	},
 };
