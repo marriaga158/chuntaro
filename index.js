@@ -9,6 +9,8 @@ const fs = require('fs');
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
+var testString = "this is a test of global variables in js";
+
 // This block is reponsible for grabbing all the commands from their files
 client.commands = new Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
