@@ -14,17 +14,20 @@ class Reminder {
         // otherwise, set it to today
         //var currentTime = new Date();
         this.timeToRemind = this.#setRemindTime(timeHour, timeMinute);
+        //console.log("this.timeToRemind: " + this.timeToRemind);
         this.msgID = msgID,
         this.ownerID = ownerID
     }
 
     #setRemindTime(hours, minutes){
         var currentTime = new Date();
-        var remindTime = new Date(currentTime.getFullYear,currentTime.getMonth,currentTime.getDate,hours,minutes, 0, 0);
-        if(currentTime.getHours>hours && currentTime.getMinutes>minutes){
+        var remindTime = new Date(currentTime.getUTCFullYear(),currentTime.getMonth(),currentTime.getDate(),hours,minutes, 0);
+        if(currentTime.getHours() >hours && currentTime.getMinutes() >minutes){
             // add a day
-            return remindTime.setDate(remindTime.getDate() + 1);
+            console.log("if");
+            return remindTime.addDays(1);
         }
+        console.log("else");
         return remindTime;
     }
 
