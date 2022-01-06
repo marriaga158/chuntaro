@@ -4,6 +4,6 @@ This is mostly an exercise in figuring out how to use the new Discord slash comm
 
 This bot's main functionality is to remind people to get on to play Valorant since everybody conveniently "forgets to get on" because they're lame.
 
-If you somehow stumble your way upon this code, that means you're either scraping for bot tokens or you're a future employer of mine! Hello! If you are a future employer, please note that this is my first time touching js since like, 7th grade.
+If you somehow stumble your way upon this code, that means you're either scraping for bot tokens or you're a future employer of mine! Hello! If you are a future employer, please note that this is my first time touching js since like, 7th grade and is not indicative of my actual programming skill.
 
 also please hire me

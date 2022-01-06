@@ -12,7 +12,7 @@ module.exports = {
             option.setName('time')
                 .setDescription('The time (in 24h format) that the reminder will be set for')
                 .setRequired(true)),
-	async execute(interaction) {
+	async execute(interaction) { // triggered when createreminder is executed
         var timeStr = interaction.options.getString('time');
         const buttonRow = new MessageActionRow()
             .addComponents(
@@ -21,6 +21,9 @@ module.exports = {
                     .setLabel('Remind Me')
                     .setStyle('PRIMARY'),
             );
+
+        // REAL first thing, check that this server doesn't already have a reminder associated with it
+        
         // First thing: screen the input to make sure it's a valid time
        
         var regExTime = /([0-2]?[0-9]):([0-9][0-9])/;
@@ -47,39 +50,32 @@ module.exports = {
         let remindRole = interaction.guild.roles.cache.find(role => role.name === roleName);
         //console.log(remindRole); // holy shit this works!
         if(!remindRole){
-            await interaction.reply({content: 'You don\'t have a specified "remind" role. Please either create a role titled "remind" or ask the server admin to do so.', ephemeral: true});
+            await interaction.reply({content: 'You don\'t have a specified "'+roleName+'" role. Please either create a role titled "'+roleName+'" or ask the server admin to do so.', ephemeral: true});
             return;
         }
-        interaction.guild.roles.create({
-            data: {
-            name: roleName, // TODO: this isn't working right
-            color: remindRole.color,
-            hoist: remindRole.hoist,
-            position: remindRole.position,
-            permissions: remindRole.permissions,
-            mentionable: remindRole.mentionable
-            }
-        })
-            .then(function(result) {
-                interaction.member.roles.add(result);
-            });
-        remindRole.delete("yea");
-
-        //console.log(interaction);
-        //let newRemRole = interaction.guild.roles.cache.find(role => role.name === "remind");
-        // newRemRole.then(console.log);
-        // interaction.member.roles.add(newRemRole); // adds the person who called the function to the role.
+        // NOTE: this command might become really slow depending on how many people use this function;
+        // I don't think this is going to be that much of a problem considering this is a personal bot
+        remindRole.members.forEach((member, i) => { // Looping through the members of Role
+            member.roles.remove(remindRole); // Removing the Role.
+        });
+        interaction.member.roles.add(remindRole);
 
 		await interaction.reply({ content: 'Reminder created for ' + timeStr + ". Click the button to be reminded.", components: [buttonRow] });
 
         // I'm actually such an idiot I can just make a reminder class and that's how i'm going to do it
-        let reminder = new Reminder(timeHr, timeMin, Math.random, interaction.user.id);
+        let reminder = new Reminder(timeHr, timeMin, interaction.user.id); // why the fuck do I do Math.random LOL
+
+        let cancelled = false;
 
         function actuallyRemind() {
             // I can't reply anymore so I"m going to have to just send a new msg
+            // The reminder is sent to the channel that it's called in
+            if(cancelled){
+                return;
+            }
             let remindChannelID = interaction.channelId;
             console.log("reminder sent");
-            interaction.client.channels.cache.get(remindChannelID).send('this is a test!');
+            interaction.client.channels.cache.get(remindChannelID).send(`<@&${remindRole.id}> Reminder!`);
         }
         
         // I need to get the number of ms betweent he
