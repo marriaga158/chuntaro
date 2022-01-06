@@ -7,7 +7,7 @@ Date.prototype.addDays = function(days) {
 }
 
 class Reminder {
-    static allReminders = []; // this is going to be all reminders
+    static #ALL_REMINDERS = []; // stores all reminders that the bot is taking care of
 
     constructor(timeHour, timeMinute, ownerID, channelID, remindRoleID, serverID) {
         this.hour = timeHour,
@@ -21,7 +21,7 @@ class Reminder {
         this.channelID = channelID // ID of the channel the createReminder msg was called in
         this.remindRoleID = remindRoleID // ID of the reminder role
         this.serverID = serverID; // Server the reminder is in
-        Reminder.allReminders.push(this); // add it to da master list
+        Reminder.#ALL_REMINDERS.push(this); // add it to da master list
     }
 
     #setRemindTime(hours, minutes){
@@ -29,10 +29,10 @@ class Reminder {
         var remindTime = new Date(currentTime.getUTCFullYear(),currentTime.getMonth(),currentTime.getDate(),hours,minutes, 0);
         if(currentTime.getHours() >hours && currentTime.getMinutes() >minutes){
             // add a day
-            console.log("if");
+            console.log("Reminder created for next day");
             return remindTime.addDays(1);
         }
-        console.log("else");
+        console.log("Reminder created for same day");
         return remindTime;
     }
 
@@ -45,7 +45,7 @@ class Reminder {
         // checks if reminder exists for server
         // TODO: This could be sped up with a hashmap or hashtable or something but honestly
         // it's fast enough considering it's going to be used on like 3 servers max
-        for(reminder of this.allReminders){
+        for(let reminder of this.#ALL_REMINDERS){
             if(reminder.getServer()==serverID){
                 return true;
             }
@@ -60,9 +60,9 @@ class Reminder {
     returns true if reminder successfully removed, false if the element didn't exist
     */
     static removeReminder(serverID){
-       for(let i=0;i<this.allReminders.length;i++){
-           if(serverID==this.allReminders[i].getServer()){
-               this.allReminders.splice(i,1); // chop it out
+       for(let i=0;i<this.#ALL_REMINDERS.length;i++){
+           if(serverID==this.#ALL_REMINDERS[i].getServer()){
+               this.#ALL_REMINDERS.splice(i,1); // chop it out
                return true;
            }
        }
@@ -78,10 +78,10 @@ class Reminder {
     static checkAndSendReminders(client){
         let currTime = new Date();
         //let listOfRemindersToSend = [];
-        for(let i=0;i<this.allReminders.length;i++){
-            if(allReminders[i].timeToRemind < currTime){
-                client.channels.cache.get(allReminders[i].channelID).send(`<@&${allReminders[i].remindRoleID}> Reminder!`);
-                this.allReminders.splice(i,1); // remove it from the array so it doesn't remind again
+        for(let i=0;i<this.#ALL_REMINDERS.length;i++){
+            if(Reminder.#ALL_REMINDERS[i].timeToRemind < currTime){
+                client.channels.cache.get(Reminder.#ALL_REMINDERS[i].channelID).send(`<@&${Reminder.#ALL_REMINDERS[i].remindRoleID}> Reminder!`);
+                this.#ALL_REMINDERS.splice(i,1); // remove it from the array so it doesn't remind again
             }
         }
         return true;

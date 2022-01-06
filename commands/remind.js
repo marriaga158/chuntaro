@@ -65,7 +65,7 @@ module.exports = {
         console.log(interaction.channelId);
         console.log(interaction.guild.id);
 
-        console.log("done");
+        console.log("done creating reminder");
         return;
 
         // let cancelled = false;
