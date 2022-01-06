@@ -1,4 +1,4 @@
-const remind = require("./commands/remind");
+//const remind = require("./commands/remind");
 
 Date.prototype.addDays = function(days) {
     var date = new Date(this.valueOf());
@@ -9,7 +9,7 @@ Date.prototype.addDays = function(days) {
 class Reminder {
     static allReminders = []; // this is going to be all reminders
 
-    constructor(timeHour, timeMinute, ownerID, channelID, serverID) {
+    constructor(timeHour, timeMinute, ownerID, channelID, remindRoleID, serverID) {
         this.hour = timeHour,
         this.minutes = timeMinute,
         // if the time specified is before the current time, set the date to the next day
@@ -19,8 +19,9 @@ class Reminder {
         //console.log("this.timeToRemind: " + this.timeToRemind);
         this.ownerID = ownerID // the person who ran the command to create the reminder in the first place
         this.channelID = channelID // ID of the channel the createReminder msg was called in
+        this.remindRoleID = remindRoleID // ID of the reminder role
         this.serverID = serverID; // Server the reminder is in
-        allReminders.push(this); // add it to da master list
+        Reminder.allReminders.push(this); // add it to da master list
     }
 
     #setRemindTime(hours, minutes){
@@ -67,6 +68,23 @@ class Reminder {
        }
 
        return false;
+    }
+
+    /*
+    loops through all active reminders and checks if they need to be triggered. 
+
+    Returns true always
+    */
+    static checkAndSendReminders(client){
+        let currTime = new Date();
+        //let listOfRemindersToSend = [];
+        for(let i=0;i<this.allReminders.length;i++){
+            if(allReminders[i].timeToRemind < currTime){
+                client.channels.cache.get(allReminders[i].channelID).send(`<@&${allReminders[i].remindRoleID}> Reminder!`);
+                this.allReminders.splice(i,1); // remove it from the array so it doesn't remind again
+            }
+        }
+        return true;
     }
 
     getOwner() {

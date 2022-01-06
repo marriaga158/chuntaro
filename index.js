@@ -5,6 +5,8 @@
 const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('./config.json');
 const fs = require('fs');
+let reminderMod = require('./reminder');
+let Reminder = reminderMod.Reminder;
 
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
@@ -35,3 +37,7 @@ for (const file of eventFiles) {
 
 // Login to Discord with your client's token
 client.login(token);
+
+setInterval(function() {
+	console.log("index checking for reminders\n");
+	Reminder.checkAndSendReminders(client); }, 60 * 1000);
