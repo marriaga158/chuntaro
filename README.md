@@ -1,4 +1,4 @@
-A terribly written and formatted quick-and-dirty bot written by someone who should just be doing their homework.
+A terribly written and formatted Discord bot that I wrote instead of doing homework.
 
 This is mostly an exercise in figuring out how to use the new Discord slash commands since I heard somewhere that the old way of using prefixes to interact with bots was being deprecated.
 
