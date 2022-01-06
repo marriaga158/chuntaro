@@ -53,6 +53,16 @@ class Reminder {
         return false;
     }
 
+    static checkOwner(ownerID,serverID){
+        for(let reminder of this.#ALL_REMINDERS){
+            if(reminder.getOwner==ownerID && reminder.getServer == serverID){
+                // they own the reminder for this server
+                return true;
+            }
+        }
+        return false;
+    }
+
     /*
     don't want to be accessing the variable directly
     so here's a quick helper func

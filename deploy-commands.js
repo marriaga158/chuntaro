@@ -24,6 +24,7 @@ for (const file of commandFiles) {
 
 const rest = new REST({ version: '9' }).setToken(token);
 
+// THIS ONLY DEPLOYS TO VALORANT BOYS AND MY TESTING SERVER CURRENTLY
 rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
 	.then(() => console.log('Successfully registered application commands.'))
 	.catch(console.error);
