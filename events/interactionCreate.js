@@ -12,7 +12,7 @@ module.exports = {
 
             //console.log(interaction);
             console.log(`Button ${interaction.customId} was pressed from command ${interaction.message.interaction.commandName} with messageID ${interaction.message.id}`)
-            if(interaction.customId="beReminded"){
+            if(interaction.customId=="beReminded"){
                 // add the user to the remind role
                 // console.log(interaction);
                 let remindRole = interaction.guild.roles.cache.find(role => role.name === "remind");
@@ -23,6 +23,20 @@ module.exports = {
                     interaction.member.roles.add(remindRole);
                     console.log("button pusher added to role");
                     interaction.reply({ content: 'You have been added to this reminder.', ephemeral: true });
+                }
+            } else if(interaction.customId=="removeReminder"){
+                // this is the same code that's in removereminder because I'm too lazy
+                // to export it or make it more abstracted
+                let roleName = "remind";
+                let remindRole = interaction.guild.roles.cache.find(role => role.name === roleName);
+                if(!remindRole){
+                    interaction.reply({content: 'You don\'t have a specified "'+roleName+'" role. Please either create a role titled "'+roleName+'" or ask the server admin to do so.', ephemeral: true});
+                    return;
+                }
+                else {
+                    interaction.member.roles.remove(remindRole);
+                    interaction.reply({content: 'Removed from reminder.', ephemeral: true});
+                    return;
                 }
             }
             return;

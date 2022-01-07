@@ -20,6 +20,10 @@ module.exports = {
                     .setCustomId('beReminded')
                     .setLabel('Remind Me')
                     .setStyle('PRIMARY'),
+                new MessageButton()
+                    .setCustomId('removeReminder')
+                    .setLabel('Don\'t Remind Me')
+                    .setStyle('DANGER')
             );
 
         // REAL first thing, check that this server doesn't already have a reminder associated with it
