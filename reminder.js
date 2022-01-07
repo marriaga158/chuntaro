@@ -54,8 +54,10 @@ class Reminder {
     }
 
     static checkOwner(ownerID,serverID){
+        // console.log('checking owners');
         for(let reminder of this.#ALL_REMINDERS){
-            if(reminder.getOwner==ownerID && reminder.getServer == serverID){
+            //console.log('input: %d %d, check against: %d %d', ownerID, serverID, reminder.getOwner, reminder.getServer);
+            if(reminder.getOwner()==ownerID && reminder.getServer()==serverID){
                 // they own the reminder for this server
                 return true;
             }
